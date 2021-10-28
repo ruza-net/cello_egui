@@ -1,5 +1,4 @@
-mod utils;
-mod elements;
+use crate::defaults::*;
 
 pub mod defaults {
     pub use crate::utils::*;
@@ -9,7 +8,8 @@ pub mod defaults {
 }
 
 
-use crate::defaults::*;
+mod utils;
+mod elements;
 
 
 #[derive(Default, Clone, Copy)]
