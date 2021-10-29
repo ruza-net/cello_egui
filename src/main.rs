@@ -12,24 +12,31 @@ pub mod defaults {
 mod utils;
 mod elements;
 
+use elements::{ Label, Row, Column, Selectable };
 
-#[derive(Default, Clone, Copy)]
-struct App;
+
+struct App {
+    table: Row<Selectable<Label<String>>>,
+}
+impl Default for App {
+    fn default() -> Self {
+        Self {
+            table: Row::new("Table".to_string().label().into()),
+        }
+    }
+}
 
 impl epi::App for App {
     fn update(&mut self, ctx: &egui::CtxRef, frame: &mut epi::Frame<'_>) {
-        let mut table =
-        elements::Column::with_children("Hello world!".label(), vec![
-            elements::Row::new("foo".label()).as_box_table(),
-            elements::Row::new("bar".label()).as_box_table(),
-            elements::Row::new("baz".label()).as_box_table(),
-        ]);
-
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.label("Foo");
             ui.separator();
 
-            table.view(ui);
+            self.table.view(ui);
+
+            if ui.button("Push").clicked() {
+                self.table.push(Row::new("foo".to_string().label().into()).as_box_table());
+            }
         });
 
         frame.set_window_size(ctx.used_size());
@@ -43,5 +50,5 @@ impl epi::App for App {
 
 fn main() {
     let options = eframe::NativeOptions::default();
-    eframe::run_native(Box::new(App), options)
+    eframe::run_native(Box::new(App::default()), options)
 }
