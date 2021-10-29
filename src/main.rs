@@ -8,6 +8,7 @@ pub mod defaults {
 }
 
 
+#[macro_use]
 mod utils;
 mod elements;
 

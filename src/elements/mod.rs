@@ -53,6 +53,7 @@ macro_rules! vectors {
 ( $($name:ident as $mode:ident),* $(,)? ) => {
 $(
 
+#[derive(Default)]
 pub struct $name<T> {
     title: T,
     content: Vec<BoxTable<T>>,
@@ -72,14 +73,18 @@ impl<T> $name<T> {
 }
 
 impl<T: for<'title> View<Ui<'title>, ()>> View<Ui<'_>, ()> for $name<T> {
-    fn view(&mut self, ui: Ui) -> () {
-        ui.$mode(|ui| {
-            self.title.view(ui);
+    fn view(&mut self, ui: Ui) {
+        self.title.view(ui);
 
-            for child in &mut self.content {
-                child.view(ui);
-            }
-        });
+        if !self.content.is_empty() {
+            ui.group(|ui| {
+                ui.$mode(|ui| {
+                    for child in &mut self.content {
+                        child.view(ui);
+                    }
+                });
+            });
+        }
     }
 }
 

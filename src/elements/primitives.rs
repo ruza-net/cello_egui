@@ -1,7 +1,10 @@
 use crate::defaults::*;
 
 
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct Nothing;
+
+#[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct Label<S>(pub S);
 
 impl View<super::Ui<'_>, ()> for Nothing {
