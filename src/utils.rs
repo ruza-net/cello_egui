@@ -26,13 +26,6 @@ impl<S> Labeled for S {
     }
 }
 
-pub trait TableMut<In, Out>: cello_model::Table<In, Out> {
-    fn insert(&mut self, at: usize, cell: Self::Child);
-
-    fn push(&mut self, cell: Self::Child) {
-        self.insert(self.len() - 1, cell)
-    }
-}
 
 pub trait AsBoxTable<T>: for<'ui> TableMut<Ui<'ui>, (), Title = T, Child = BoxTable<T>> {
     fn as_box_table(self) -> BoxTable<T>;

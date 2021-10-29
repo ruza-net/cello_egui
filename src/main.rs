@@ -4,7 +4,7 @@ pub mod defaults {
     pub use crate::utils::*;
     pub use eframe::{ egui, epi };
 
-    pub use cello_model::{ View, Table };
+    pub use cello_model::{ View, Table, TableMut };
 }
 
 
