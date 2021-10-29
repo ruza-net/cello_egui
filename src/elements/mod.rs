@@ -2,7 +2,7 @@ use crate::defaults::*;
 
 pub mod primitives;
 
-pub use primitives::{ Label, Nothing };
+pub use primitives::{ Label, Nothing, Selectable };
 
 
 pub type Ui<'ui> = &'ui mut egui::Ui;
