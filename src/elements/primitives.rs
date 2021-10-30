@@ -10,7 +10,7 @@ pub struct Nothing;
 pub struct Label<S>(pub S);
 
 impl View<Ui<'_>, ()> for Nothing {
-    fn view(&mut self, ui: super::Ui) -> () {}
+    fn view(&mut self, _: super::Ui) -> () {}
 }
 impl Table<Ui<'_>, ()> for Nothing {
     type Title = Self;
