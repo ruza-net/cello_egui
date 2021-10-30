@@ -1,5 +1,7 @@
 use crate::defaults::*;
 
+use super::Ui;
+
 
 #[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct Nothing;
@@ -7,10 +9,10 @@ pub struct Nothing;
 #[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct Label<S>(pub S);
 
-impl View<super::Ui<'_>, ()> for Nothing {
+impl View<Ui<'_>, ()> for Nothing {
     fn view(&mut self, ui: super::Ui) -> () {}
 }
-impl Table<super::Ui<'_>, ()> for Nothing {
+impl Table<Ui<'_>, ()> for Nothing {
     type Title = Self;
     type Child = super::BoxTable<Self>;
 
@@ -32,12 +34,12 @@ impl Table<super::Ui<'_>, ()> for Nothing {
 }
 
 
-impl<S: AsRef<str>> View<super::Ui<'_>, ()> for Label<S> {
+impl<S: AsRef<str>> View<Ui<'_>, ()> for Label<S> {
     fn view(&mut self, ui: super::Ui) -> () {
         ui.label(self.0.as_ref());
     }
 }
-impl<S: AsRef<str>> Table<super::Ui<'_>, ()> for Label<S> {
+impl<S: AsRef<str>> Table<Ui<'_>, ()> for Label<S> {
     type Title = Self;
     type Child = super::BoxTable<Self>;
 
@@ -74,22 +76,28 @@ impl<V> From<V> for Selectable<V> {
     }
 }
 
-impl<V: for<'ui> View<super::Ui<'ui>, ()>> View<super::Ui<'_>, ()> for Selectable<V> {
+impl<V: for<'ui> View<Ui<'ui>, ()>> View<Ui<'_>, ()> for Selectable<V> {
     fn view(&mut self, ui: super::Ui) {
-        ui.group(|ui|
+        let mut frame = egui::Frame::default();
+
+        if self.selected {
+            frame.fill = egui::Color32::LIGHT_GRAY;
+        }
+
+        frame.show(ui, |ui| {
             ui.horizontal(|ui| {
                 ui.checkbox(&mut self.selected, "");
 
                 self.inner.view(ui);
             })
-        );
+        });
     }
 }
 
-impl<'s, V: for<'ui> Table<super::Ui<'ui>, ()>> Table<super::Ui<'s>, ()> for Selectable<V> {
-    type Title = <V as Table<super::Ui<'s>, ()>>::Title;
+impl<'s, V: for<'ui> Table<Ui<'ui>, ()>> Table<Ui<'s>, ()> for Selectable<V> {
+    type Title = <V as Table<Ui<'s>, ()>>::Title;
 
-    type Child = <V as Table<super::Ui<'s>, ()>>::Child;
+    type Child = <V as Table<Ui<'s>, ()>>::Child;
 
     fn title(&self) -> &Self::Title {
         self.inner.title()
@@ -107,7 +115,7 @@ impl<'s, V: for<'ui> Table<super::Ui<'ui>, ()>> Table<super::Ui<'s>, ()> for Sel
         self.inner.len()
     }
 }
-impl<V: for<'ui> TableMut<super::Ui<'ui>, ()>> TableMut<super::Ui<'_>, ()> for Selectable<V> {
+impl<V: for<'ui> TableMut<Ui<'ui>, ()>> TableMut<Ui<'_>, ()> for Selectable<V> {
     fn insert(&mut self, at: usize, cell: Self::Child) {
         self.inner.insert(at, cell)
     }
