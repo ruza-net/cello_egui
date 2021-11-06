@@ -29,6 +29,9 @@ impl<T> Table<Ui<'_>, ()> for BoxTable<T> {
     fn title(&self) -> &Self::Title {
         self.0.title()
     }
+    fn title_mut(&mut self) -> &mut Self::Title {
+        self.0.title_mut()
+    }
 
     fn content(&self) -> &[Self::Child] {
         self.0.content()
@@ -94,6 +97,9 @@ impl<T: for<'title> View<Ui<'title>, ()>> Table<Ui<'_>, ()> for $name<T> {
 
     fn title(&self) -> &Self::Title {
         &self.title
+    }
+    fn title_mut(&mut self) -> &mut Self::Title {
+        &mut self.title
     }
 
     fn content(&self) -> &[Self::Child] {

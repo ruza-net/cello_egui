@@ -19,6 +19,9 @@ impl Table<Ui<'_>, ()> for Nothing {
     fn title(&self) -> &Self::Title {
         self
     }
+    fn title_mut(&mut self) -> &mut Self::Title {
+        self
+    }
 
     fn content(&self) -> &[Self::Child] {
         &[]
@@ -44,6 +47,9 @@ impl<S: AsRef<str>> Table<Ui<'_>, ()> for Label<S> {
     type Child = super::BoxTable<Self>;
 
     fn title(&self) -> &Self::Title {
+        self
+    }
+    fn title_mut(&mut self) -> &mut Self::Title {
         self
     }
 
@@ -101,6 +107,9 @@ impl<'s, V: for<'ui> Table<Ui<'ui>, ()>> Table<Ui<'s>, ()> for Selectable<V> {
 
     fn title(&self) -> &Self::Title {
         self.inner.title()
+    }
+    fn title_mut(&mut self) -> &mut Self::Title {
+        self.inner.title_mut()
     }
 
     fn content(&self) -> &[Self::Child] {
