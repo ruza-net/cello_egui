@@ -35,7 +35,16 @@ impl epi::App for App {
             self.table.view(ui);
 
             if ui.button("Push").clicked() {
-                self.table.push(Row::new("foo".to_string().label().into()).as_box_table());
+                let push_action =
+                |subtable: &mut Row<_>| {
+                    subtable.push(
+                        Row::new("foo".to_string().label().into()).as_box_table()
+                    );
+
+                    Some(())
+                };
+
+                self.table.title_mut().walk(push_action);
             }
         });
 

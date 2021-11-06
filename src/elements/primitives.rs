@@ -1,6 +1,6 @@
 use crate::defaults::*;
 
-use super::Ui;
+use super::{BoxTable, Ui};
 
 
 #[derive(Default, Clone, Copy, PartialEq, Eq)]
@@ -127,5 +127,18 @@ impl<'s, V: for<'ui> Table<Ui<'ui>, ()>> Table<Ui<'s>, ()> for Selectable<V> {
 impl<V: for<'ui> TableMut<Ui<'ui>, ()>> TableMut<Ui<'_>, ()> for Selectable<V> {
     fn insert(&mut self, at: usize, cell: Self::Child) {
         self.inner.insert(at, cell)
+    }
+}
+
+impl<'ui, T> Selectable<T>
+where T: Table<Ui<'ui>, (), Child = super::BoxTable<T>> {
+    pub fn walk(&mut self, with: impl FnMut(&mut T)) {
+        if self.selected {
+            with(&mut self.inner);
+
+            for child in self.inner.content_mut() {
+                with(child);
+            }
+        }
     }
 }

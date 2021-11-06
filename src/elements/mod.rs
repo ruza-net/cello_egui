@@ -52,6 +52,12 @@ impl<T> TableMut<Ui<'_>, ()> for BoxTable<T> {
 }
 
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum TableWalkControl {
+    GoDeeper,
+    Halt,
+}
+
 macro_rules! vectors {
 ( $($name:ident as $mode:ident),* $(,)? ) => {
 $(
