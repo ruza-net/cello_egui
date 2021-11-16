@@ -1,6 +1,6 @@
 use crate::defaults::*;
 
-use super::{BoxTable, Ui};
+use super::Ui;
 
 
 #[derive(Default, Clone, Copy, PartialEq, Eq)]
@@ -9,8 +9,9 @@ pub struct Nothing;
 #[derive(Default, Clone, Copy, PartialEq, Eq)]
 pub struct Label<S>(pub S);
 
+
 impl View<Ui<'_>, ()> for Nothing {
-    fn view(&mut self, _: super::Ui) -> () {}
+    fn view(&mut self, _: super::Ui) {}
 }
 impl Table<Ui<'_>, ()> for Nothing {
     type Title = Self;
@@ -38,7 +39,7 @@ impl Table<Ui<'_>, ()> for Nothing {
 
 
 impl<S: AsRef<str>> View<Ui<'_>, ()> for Label<S> {
-    fn view(&mut self, ui: super::Ui) -> () {
+    fn view(&mut self, ui: super::Ui) {
         ui.label(self.0.as_ref());
     }
 }
@@ -72,6 +73,7 @@ pub struct Selectable<V> {
     selected: bool,
     inner: V,
 }
+
 
 impl<V> From<V> for Selectable<V> {
     fn from(inner: V) -> Selectable<V> {

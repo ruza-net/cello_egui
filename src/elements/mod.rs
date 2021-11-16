@@ -18,7 +18,7 @@ impl<T> From<DynTableMut<T>> for BoxTable<T> {
 }
 
 impl<T> View<Ui<'_>, ()> for BoxTable<T> {
-    fn view(&mut self, ui: Ui<'_>) -> () {
+    fn view(&mut self, ui: Ui<'_>) {
         self.0.view(ui)
     }
 }
@@ -76,6 +76,7 @@ pub struct $name<T> {
     content: Vec<BoxTable<T>>,
 }
 
+#[allow(dead_code)]
 impl<T> $name<T> {
     pub fn new(title: T) -> Self {
         Self {
@@ -89,7 +90,8 @@ impl<T> $name<T> {
     }
 }
 
-impl<T: for<'title> View<Ui<'title>, ()>> View<Ui<'_>, ()> for $name<T> {
+impl<T: for<'title> View<Ui<'title>, ()>>
+View<Ui<'_>, ()> for $name<T> {
     fn view(&mut self, ui: Ui) {
         self.title.view(ui);
 
@@ -105,7 +107,8 @@ impl<T: for<'title> View<Ui<'title>, ()>> View<Ui<'_>, ()> for $name<T> {
     }
 }
 
-impl<T: for<'title> View<Ui<'title>, ()>> Table<Ui<'_>, ()> for $name<T> {
+impl<T: for<'title> View<Ui<'title>, ()>>
+Table<Ui<'_>, ()> for $name<T> {
     type Title = T;
     type Child = BoxTable<T>;
 
@@ -129,11 +132,13 @@ impl<T: for<'title> View<Ui<'title>, ()>> Table<Ui<'_>, ()> for $name<T> {
     }
 }
 
-impl<T: for<'title> View<Ui<'title>, ()>> TableMut<Ui<'_>, ()> for $name<T> {
+impl<T: for<'title> View<Ui<'title>, ()>>
+TableMut<Ui<'_>, ()> for $name<T> {
     fn insert(&mut self, at: usize, cell: Self::Child) {
         self.content.insert(at, cell)
     }
 }
+
 
 )*
 };
