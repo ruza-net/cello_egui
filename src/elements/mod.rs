@@ -51,12 +51,20 @@ impl<T> TableMut<Ui<'_>, ()> for BoxTable<T> {
     }
 }
 
+impl<T: Checkable> Walkable for BoxTable<T> {
+    type Item = Self;
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum TableWalkControl {
-    GoDeeper,
-    Halt,
+    fn walk(&mut self, action: impl Fn(&mut Self::Item) + Copy) {
+        for child in self.content_mut() {
+            child.walk(action);
+        }
+
+        if self.title().check() {
+            action(self)
+        }
+    }
 }
+
 
 macro_rules! vectors {
 ( $($name:ident as $mode:ident),* $(,)? ) => {

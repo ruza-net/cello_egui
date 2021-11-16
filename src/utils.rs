@@ -28,10 +28,21 @@ impl<S> Labeled for S {
 
 
 pub trait AsBoxTable<T>: for<'ui> TableMut<Ui<'ui>, (), Title = T, Child = BoxTable<T>> {
-    fn as_box_table(self) -> BoxTable<T>;
+    fn to_box_table(self) -> BoxTable<T>;
 }
 impl<T, X: 'static + for<'ui> TableMut<Ui<'ui>, (), Title = T, Child = BoxTable<T>>> AsBoxTable<T> for X {
-    fn as_box_table(self) -> BoxTable<T> {
+    fn to_box_table(self) -> BoxTable<T> {
         BoxTable::from(Box::new(self) as Box<dyn for<'ui> TableMut<Ui<'ui>, (), Child = BoxTable<T>, Title = T>>)
     }
+}
+
+
+pub trait Walkable {
+    type Item;
+
+    fn walk(&mut self, action: impl Fn(&mut Self::Item) + Copy);
+}
+
+pub trait Checkable {
+    fn check(&self) -> bool;
 }

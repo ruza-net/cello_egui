@@ -130,15 +130,9 @@ impl<V: for<'ui> TableMut<Ui<'ui>, ()>> TableMut<Ui<'_>, ()> for Selectable<V> {
     }
 }
 
-impl<'ui, T> Selectable<T>
-where T: Table<Ui<'ui>, (), Child = super::BoxTable<T>> {
-    pub fn walk(&mut self, with: impl FnMut(&mut T)) {
-        if self.selected {
-            with(&mut self.inner);
 
-            for child in self.inner.content_mut() {
-                with(child);
-            }
-        }
+impl<T> Checkable for Selectable<T> {
+    fn check(&self) -> bool {
+        self.selected
     }
 }

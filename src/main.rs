@@ -12,16 +12,16 @@ pub mod defaults {
 mod utils;
 mod elements;
 
-use elements::{ Label, Row, Column, Selectable };
+use elements::{ Label, Row, BoxTable, Selectable };
 
 
 struct App {
-    table: Row<Selectable<Label<String>>>,
+    table: BoxTable<Selectable<Label<String>>>,
 }
 impl Default for App {
     fn default() -> Self {
         Self {
-            table: Row::new("Table".to_string().label().into()),
+            table: Row::new("Table".to_string().label().into()).to_box_table(),
         }
     }
 }
@@ -36,15 +36,14 @@ impl epi::App for App {
 
             if ui.button("Push").clicked() {
                 let push_action =
-                |subtable: &mut Row<_>| {
+                |subtable: &mut BoxTable<_>| {
                     subtable.push(
-                        Row::new("foo".to_string().label().into()).as_box_table()
+                        Row::new("foo".to_string().label().into()).to_box_table()
                     );
-
-                    Some(())
                 };
 
-                self.table.title_mut().walk(push_action);
+                self.table
+                    .walk(push_action);
             }
         });
 
